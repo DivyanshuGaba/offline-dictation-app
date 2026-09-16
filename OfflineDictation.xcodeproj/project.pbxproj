@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A88FFDCC3059BE94001FCAD6 /* DictationCore in Frameworks */ = {isa = PBXBuildFile; productRef = A88FFDCB3059BE94001FCAD6 /* DictationCore */; };
+		A88FFDD23059C1B5001FCAD6 /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = A88FFDD13059C1B5001FCAD6 /* WhisperKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,16 +27,25 @@
 		A890BF383059BC2300708D30 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				A88FFDD23059C1B5001FCAD6 /* WhisperKit in Frameworks */,
 				A88FFDCC3059BE94001FCAD6 /* DictationCore in Frameworks */,
 			);
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A88FFDD03059C1B5001FCAD6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		A890BF323059BC2300708D30 = {
 			isa = PBXGroup;
 			children = (
 				A890BF3D3059BC2300708D30 /* OfflineDictation */,
+				A88FFDD03059C1B5001FCAD6 /* Frameworks */,
 				A890BF3C3059BC2300708D30 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -67,6 +77,7 @@
 			name = OfflineDictation;
 			packageProductDependencies = (
 				A88FFDCB3059BE94001FCAD6 /* DictationCore */,
+				A88FFDD13059C1B5001FCAD6 /* WhisperKit */,
 			);
 			productName = OfflineDictation;
 			productReference = A890BF3B3059BC2300708D30 /* OfflineDictation.app */;
@@ -98,6 +109,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				A88FFDCA3059BE94001FCAD6 /* XCLocalSwiftPackageReference "DictationCore" */,
+				A88FFDCD3059C08D001FCAD6 /* XCRemoteSwiftPackageReference "WhisperKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A890BF3C3059BC2300708D30 /* Products */;
@@ -257,7 +269,17 @@
 				DEVELOPMENT_TEAM = BW5BHFVBG6;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PRINTING = NO;
+				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -289,7 +311,17 @@
 				DEVELOPMENT_TEAM = BW5BHFVBG6;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PRINTING = NO;
+				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -338,10 +370,26 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		A88FFDCD3059C08D001FCAD6 /* XCRemoteSwiftPackageReference "WhisperKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/argmaxinc/WhisperKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		A88FFDCB3059BE94001FCAD6 /* DictationCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DictationCore;
+		};
+		A88FFDD13059C1B5001FCAD6 /* WhisperKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A88FFDCD3059C08D001FCAD6 /* XCRemoteSwiftPackageReference "WhisperKit" */;
+			productName = WhisperKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
