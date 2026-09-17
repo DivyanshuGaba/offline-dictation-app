@@ -15,9 +15,22 @@
 		A890BF3B3059BC2300708D30 /* OfflineDictation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OfflineDictation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		A8477FF2305C430C00A917C3 /* Exceptions for "OfflineDictation" folder in "OfflineDictation" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = A890BF3A3059BC2300708D30 /* OfflineDictation */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		A890BF3D3059BC2300708D30 /* OfflineDictation */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A8477FF2305C430C00A917C3 /* Exceptions for "OfflineDictation" folder in "OfflineDictation" target */,
+			);
 			path = OfflineDictation;
 			sourceTree = "<group>";
 		};
@@ -282,6 +295,7 @@
 				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OfflineDictation/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app needs microphone access to transcribe your speech.";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -325,6 +339,7 @@
 				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OfflineDictation/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app needs microphone access to transcribe your speech.";
 				LD_RUNPATH_SEARCH_PATHS = (

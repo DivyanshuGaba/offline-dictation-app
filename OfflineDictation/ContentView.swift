@@ -20,6 +20,9 @@ struct ContentView: View {
         }
         .padding()
         .frame(width: 400, height: 200)
+        .onReceive(NotificationCenter.default.publisher(for: .toggleRecording)) { _ in
+            isRecording ? stopRecording() : startRecording()
+        }
     }
 
     func startRecording() {

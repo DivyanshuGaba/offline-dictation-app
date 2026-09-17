@@ -1,17 +1,12 @@
-//
-//  OfflineDictationApp.swift
-//  OfflineDictation
-//
-//  Created by Divyanshu Gaba on 15/09/2026.
-//
-
 import SwiftUI
 
 @main
 struct OfflineDictationApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+
     var body: some Scene {
-        WindowGroup {
-            ContentView()
+        Settings {
+            EmptyView()
         }
     }
 }
