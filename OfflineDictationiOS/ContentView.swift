@@ -3,6 +3,7 @@ import WhisperKit
 import AVFoundation
 
 struct ContentView: View {
+    @Environment(\.scenePhase) private var scenePhase
     @State private var statusText = "Ready"
     @State private var isRecording = false
     @State private var isProcessing = false
@@ -27,24 +28,51 @@ struct ContentView: View {
         }
         .padding()
         .onReceive(NotificationCenter.default.publisher(for: .startDictationFromKeyboard)) { _ in
-            startRecording()
+            startRecordingIfRequested()
         }
-        .onAppear {
-            requestMicPermission()
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active { startRecordingIfRequested() }
+        }
+        .task {
+            await loadModelIfNeeded()
+            startRecordingIfRequested()
         }
     }
 
-    func requestMicPermission() {
-        AVAudioSession.sharedInstance().requestRecordPermission { granted in
-            DispatchQueue.main.async {
-                if !granted {
-                    statusText = "Microphone access denied. Enable it in iOS Settings."
-                }
-            }
+    func startRecordingIfRequested() {
+        guard SharedStorage.isRecordingRequested(), !isRecording, !isProcessing else { return }
+        startRecording()
+    }
+
+    func loadModelIfNeeded() async {
+        guard whisperPipe == nil else { return }
+        if !isRecording && !isProcessing { statusText = "Loading model..." }
+        do {
+            whisperPipe = try await WhisperKit(WhisperKitConfig(model: "small"))
+            if !isRecording && !isProcessing { statusText = "Ready" }
+        } catch {
+            statusText = "Model failed to load: \(error.localizedDescription)"
         }
     }
 
     func startRecording() {
+        guard !isRecording else { return }
+
+        switch AVAudioApplication.shared.recordPermission {
+        case .granted:
+            beginRecording()
+        case .undetermined:
+            AVAudioApplication.requestRecordPermission { granted in
+                DispatchQueue.main.async {
+                    if granted { beginRecording() } else { statusText = "Microphone access denied. Enable it in iOS Settings." }
+                }
+            }
+        default:
+            statusText = "Microphone access denied. Enable it in iOS Settings."
+        }
+    }
+
+    func beginRecording() {
         guard !isRecording else { return }
 
         let session = AVAudioSession.sharedInstance()
@@ -68,33 +96,42 @@ struct ContentView: View {
         ]
 
         do {
+            try? FileManager.default.removeItem(at: fileURL)
             audioRecorder = try AVAudioRecorder(url: fileURL, settings: settings)
-            audioRecorder?.record()
+            guard audioRecorder?.record() == true else {
+                statusText = "Could not start recording"
+                return
+            }
+            SharedStorage.clearRecordingRequest()
             isRecording = true
-            statusText = "Recording..."
+            statusText = "Recording... tap Stop when done"
         } catch {
-            statusText = "Could not start recording"
+            statusText = "Could not start recording: \(error.localizedDescription)"
         }
     }
 
     func stopRecording() {
+        let duration = audioRecorder?.currentTime ?? 0
         audioRecorder?.stop()
         isRecording = false
-        isProcessing = true
-        statusText = "Transcribing..."
 
-        guard let url = recordingURL else {
-            statusText = "No recording found"
-            isProcessing = false
+        guard let url = recordingURL, duration > 0.5,
+              FileManager.default.fileExists(atPath: url.path) else {
+            statusText = "Recording too short. Tap Record and try again."
             return
         }
+
+        isProcessing = true
+        statusText = "Transcribing..."
 
         Task {
             do {
                 if whisperPipe == nil {
-                    let config = WhisperKitConfig(model: "small")
-                    whisperPipe = try await WhisperKit(config)
+                    statusText = "Loading model (first time takes a few minutes)..."
+                    await loadModelIfNeeded()
+                    statusText = "Transcribing..."
                 }
+                guard whisperPipe != nil else { isProcessing = false; return }
                 let result = try await whisperPipe!.transcribe(audioPath: url.path)
                 let text = result.first?.text.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
                 if text.isEmpty {
@@ -105,7 +142,7 @@ struct ContentView: View {
                     SharedStorage.clearRecordingRequest()
                 }
             } catch {
-                statusText = "Transcription failed"
+                statusText = "Transcription failed: \(error.localizedDescription)"
             }
             isProcessing = false
         }

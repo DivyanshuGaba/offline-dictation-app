@@ -395,6 +395,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = BW5BHFVBG6;
+				ENABLE_DEBUG_DYLIB = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DictationKeyboard/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = DictationKeyboard;

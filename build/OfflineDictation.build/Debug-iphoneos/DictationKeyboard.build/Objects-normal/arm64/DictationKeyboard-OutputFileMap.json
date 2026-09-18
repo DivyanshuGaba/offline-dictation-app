@@ -1,0 +1,29 @@
+{
+  "" : {
+    "diagnostics" : "/Users/divyanshugaba/Developer/OfflineDictation/build/OfflineDictation.build/Debug-iphoneos/DictationKeyboard.build/Objects-normal/arm64/DictationKeyboard-primary.dia",
+    "emit-module-dependencies" : "/Users/divyanshugaba/Developer/OfflineDictation/build/OfflineDictation.build/Debug-iphoneos/DictationKeyboard.build/Objects-normal/arm64/DictationKeyboard-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/divyanshugaba/Developer/OfflineDictation/build/OfflineDictation.build/Debug-iphoneos/DictationKeyboard.build/Objects-normal/arm64/DictationKeyboard-primary-emit-module.dia",
+    "pch" : "/Users/divyanshugaba/Developer/OfflineDictation/build/OfflineDictation.build/Debug-iphoneos/DictationKeyboard.build/Objects-normal/arm64/DictationKeyboard-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/divyanshugaba/Developer/OfflineDictation/build/OfflineDictation.build/Debug-iphoneos/DictationKeyboard.build/Objects-normal/arm64/DictationKeyboard-primary.swiftdeps"
+  },
+  "/Users/divyanshugaba/Developer/OfflineDictation/DictationKeyboard/KeyboardViewController.swift" : {
+    "const-values" : "/Users/divyanshugaba/Developer/OfflineDictation/build/OfflineDictation.build/Debug-iphoneos/DictationKeyboard.build/Objects-normal/arm64/KeyboardViewController.swiftconstvalues",
+    "dependencies" : "/Users/divyanshugaba/Developer/OfflineDictation/build/OfflineDictation.build/Debug-iphoneos/DictationKeyboard.build/Objects-normal/arm64/KeyboardViewController.d",
+    "diagnostics" : "/Users/divyanshugaba/Developer/OfflineDictation/build/OfflineDictation.build/Debug-iphoneos/DictationKeyboard.build/Objects-normal/arm64/KeyboardViewController.dia",
+    "index-unit-output-path" : "/OfflineDictation.build/Debug-iphoneos/DictationKeyboard.build/Objects-normal/arm64/KeyboardViewController.o",
+    "llvm-bc" : "/Users/divyanshugaba/Developer/OfflineDictation/build/OfflineDictation.build/Debug-iphoneos/DictationKeyboard.build/Objects-normal/arm64/KeyboardViewController.bc",
+    "object" : "/Users/divyanshugaba/Developer/OfflineDictation/build/OfflineDictation.build/Debug-iphoneos/DictationKeyboard.build/Objects-normal/arm64/KeyboardViewController.o",
+    "swift-dependencies" : "/Users/divyanshugaba/Developer/OfflineDictation/build/OfflineDictation.build/Debug-iphoneos/DictationKeyboard.build/Objects-normal/arm64/KeyboardViewController.swiftdeps",
+    "swiftmodule" : "/Users/divyanshugaba/Developer/OfflineDictation/build/OfflineDictation.build/Debug-iphoneos/DictationKeyboard.build/Objects-normal/arm64/KeyboardViewController~partial.swiftmodule"
+  },
+  "/Users/divyanshugaba/Developer/OfflineDictation/OfflineDictationiOS/SharedStorage.swift" : {
+    "const-values" : "/Users/divyanshugaba/Developer/OfflineDictation/build/OfflineDictation.build/Debug-iphoneos/DictationKeyboard.build/Objects-normal/arm64/SharedStorage.swiftconstvalues",
+    "dependencies" : "/Users/divyanshugaba/Developer/OfflineDictation/build/OfflineDictation.build/Debug-iphoneos/DictationKeyboard.build/Objects-normal/arm64/SharedStorage.d",
+    "diagnostics" : "/Users/divyanshugaba/Developer/OfflineDictation/build/OfflineDictation.build/Debug-iphoneos/DictationKeyboard.build/Objects-normal/arm64/SharedStorage.dia",
+    "index-unit-output-path" : "/OfflineDictation.build/Debug-iphoneos/DictationKeyboard.build/Objects-normal/arm64/SharedStorage.o",
+    "llvm-bc" : "/Users/divyanshugaba/Developer/OfflineDictation/build/OfflineDictation.build/Debug-iphoneos/DictationKeyboard.build/Objects-normal/arm64/SharedStorage.bc",
+    "object" : "/Users/divyanshugaba/Developer/OfflineDictation/build/OfflineDictation.build/Debug-iphoneos/DictationKeyboard.build/Objects-normal/arm64/SharedStorage.o",
+    "swift-dependencies" : "/Users/divyanshugaba/Developer/OfflineDictation/build/OfflineDictation.build/Debug-iphoneos/DictationKeyboard.build/Objects-normal/arm64/SharedStorage.swiftdeps",
+    "swiftmodule" : "/Users/divyanshugaba/Developer/OfflineDictation/build/OfflineDictation.build/Debug-iphoneos/DictationKeyboard.build/Objects-normal/arm64/SharedStorage~partial.swiftmodule"
+  }
+}
