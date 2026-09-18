@@ -5,11 +5,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem?
     var popover = NSPopover()
     var hotkeyMonitor: Any?
+    var isCurrentlyRecording = false
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         let options: [String: Any] = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true]
         AXIsProcessTrustedWithOptions(options as CFDictionary)
-        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+        print("AppDelegate launched successfully")
+
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         if let button = statusItem?.button {
             button.image = NSImage(systemSymbolName: "mic.fill", accessibilityDescription: "Dictation")
             button.action = #selector(togglePopover)
@@ -20,14 +23,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         popover.behavior = .transient
         popover.contentViewController = NSHostingController(rootView: ContentView())
 
-        hotkeyMonitor = NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { event in
-            if event.isARepeat {
-                return
-            }
-            if event.modifierFlags.contains(.option) && event.keyCode == 49 {
+        var lastOptionPressTime: Date?
+
+        hotkeyMonitor = NSEvent.addGlobalMonitorForEvents(matching: .flagsChanged) { event in
+            let optionIsDown = event.modifierFlags.contains(.option)
+            guard optionIsDown else { return }
+
+            let now = Date()
+            if let last = lastOptionPressTime, now.timeIntervalSince(last) < 0.4 {
                 NotificationCenter.default.post(name: .toggleRecording, object: nil)
+                lastOptionPressTime = nil
+            } else {
+                lastOptionPressTime = now
             }
         }
+    }
+
+    func updateMenuBarIcon(recording: Bool) {
+        print("updateMenuBarIcon fired, recording is \(recording)")
+        statusItem?.button?.image = nil
+        statusItem?.button?.title = recording ? "RECORDING" : "idle"
     }
 
     @objc func togglePopover() {

@@ -56,6 +56,7 @@ struct ContentView: View {
     }
 
     func beginRecording() {
+        (NSApp.delegate as? AppDelegate)?.updateMenuBarIcon(recording: true)
         let fileURL = FileManager.default.temporaryDirectory.appendingPathComponent("liveRecording.wav")
         recordingURL = fileURL
 
@@ -80,6 +81,7 @@ struct ContentView: View {
     func stopRecording() {
         audioRecorder?.stop()
         isRecording = false
+        (NSApp.delegate as? AppDelegate)?.updateMenuBarIcon(recording: false)
         isTranscribing = true
         resultText = "Transcribing..."
         transcribeRecording()
@@ -141,3 +143,4 @@ struct ContentView: View {
 #Preview {
     ContentView()
 }
+

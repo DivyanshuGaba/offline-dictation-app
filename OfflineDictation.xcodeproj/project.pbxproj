@@ -9,12 +9,10 @@
 /* Begin PBXBuildFile section */
 		A88FFDCC3059BE94001FCAD6 /* DictationCore in Frameworks */ = {isa = PBXBuildFile; productRef = A88FFDCB3059BE94001FCAD6 /* DictationCore */; };
 		A88FFDD23059C1B5001FCAD6 /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = A88FFDD13059C1B5001FCAD6 /* WhisperKit */; };
-		A8D555EB305D716700209995 /* File.txt in Resources */ = {isa = PBXBuildFile; fileRef = A8D555EA305D716600209995 /* File.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		A890BF3B3059BC2300708D30 /* OfflineDictation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OfflineDictation.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A8D555EA305D716600209995 /* File.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = File.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -59,7 +57,6 @@
 		A890BF323059BC2300708D30 = {
 			isa = PBXGroup;
 			children = (
-				A8D555EA305D716600209995 /* File.txt */,
 				A890BF3D3059BC2300708D30 /* OfflineDictation */,
 				A88FFDD03059C1B5001FCAD6 /* Frameworks */,
 				A890BF3C3059BC2300708D30 /* Products */,
@@ -141,7 +138,6 @@
 		A890BF393059BC2300708D30 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
-				A8D555EB305D716700209995 /* File.txt in Resources */,
 			);
 		};
 /* End PBXResourcesBuildPhase section */
