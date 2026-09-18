@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A876191D305DDF6700612C7C /* DictationKeyboard.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A8761916305DDF6600612C7C /* DictationKeyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A876192D305DE32800612C7C /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = A876192C305DE32800612C7C /* WhisperKit */; };
 		A88FFDCC3059BE94001FCAD6 /* DictationCore in Frameworks */ = {isa = PBXBuildFile; productRef = A88FFDCB3059BE94001FCAD6 /* DictationCore */; };
 		A88FFDD23059C1B5001FCAD6 /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = A88FFDD13059C1B5001FCAD6 /* WhisperKit */; };
 /* End PBXBuildFile section */
@@ -62,12 +63,20 @@
 			);
 			target = A8761915305DDF6600612C7C /* DictationKeyboard */;
 		};
+		A876192B305DE1AB00612C7C /* Exceptions for "OfflineDictationiOS" folder in "OfflineDictationiOS" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = A8761906305DDEEB00612C7C /* OfflineDictationiOS */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		A8761908305DDEEC00612C7C /* OfflineDictationiOS */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
+				A876192B305DE1AB00612C7C /* Exceptions for "OfflineDictationiOS" folder in "OfflineDictationiOS" target */,
 				A8761929305DE09B00612C7C /* Exceptions for "OfflineDictationiOS" folder in "DictationKeyboard" target */,
 			);
 			path = OfflineDictationiOS;
@@ -95,6 +104,7 @@
 		A8761904305DDEEB00612C7C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				A876192D305DE32800612C7C /* WhisperKit in Frameworks */,
 			);
 		};
 		A8761913305DDF6600612C7C /* Frameworks */ = {
@@ -161,6 +171,9 @@
 				A8761908305DDEEC00612C7C /* OfflineDictationiOS */,
 			);
 			name = OfflineDictationiOS;
+			packageProductDependencies = (
+				A876192C305DE32800612C7C /* WhisperKit */,
+			);
 			productName = OfflineDictationiOS;
 			productReference = A8761907305DDEEB00612C7C /* OfflineDictationiOS.app */;
 			productType = "com.apple.product-type.application";
@@ -307,7 +320,9 @@
 				DEVELOPMENT_TEAM = BW5BHFVBG6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OfflineDictationiOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = OfflineDictation;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app needs microphone access to transcribe your speech.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -344,7 +359,9 @@
 				DEVELOPMENT_TEAM = BW5BHFVBG6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = OfflineDictationiOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = OfflineDictation;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "This app needs microphone access to transcribe your speech.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -700,6 +717,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A876192C305DE32800612C7C /* WhisperKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A88FFDCD3059C08D001FCAD6 /* XCRemoteSwiftPackageReference "WhisperKit" */;
+			productName = WhisperKit;
+		};
 		A88FFDCB3059BE94001FCAD6 /* DictationCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DictationCore;
