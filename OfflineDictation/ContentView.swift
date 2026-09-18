@@ -9,6 +9,7 @@ struct ContentView: View {
     @State private var isBenchmarking = false
     @State private var audioRecorder: AVAudioRecorder?
     @State private var recordingURL: URL?
+    @State private var whisperPipe: WhisperKit?
 
     var body: some View {
         VStack(spacing: 20) {
@@ -92,10 +93,16 @@ struct ContentView: View {
         }
         Task {
             do {
-                let config = WhisperKitConfig(model: "small")
-                let pipe = try await WhisperKit(config)
-                let result = try await pipe.transcribe(audioPath: url.path)
-                resultText = result.first?.text ?? "No text returned"
+                if whisperPipe == nil {
+                    let config = WhisperKitConfig(model: "small")
+                    whisperPipe = try await WhisperKit(config)
+                }
+                let result = try await whisperPipe!.transcribe(audioPath: url.path)
+                let text = result.first?.text ?? ""
+                resultText = text.isEmpty ? "No text returned" : text
+                if !text.isEmpty {
+                    TextInjector.paste(text)
+                }
             } catch {
                 resultText = "Error: \(error.localizedDescription)"
             }

@@ -7,6 +7,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var hotkeyMonitor: Any?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        let options: [String: Any] = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true]
+        AXIsProcessTrustedWithOptions(options as CFDictionary)
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         if let button = statusItem?.button {
             button.image = NSImage(systemSymbolName: "mic.fill", accessibilityDescription: "Dictation")
@@ -19,6 +21,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         popover.contentViewController = NSHostingController(rootView: ContentView())
 
         hotkeyMonitor = NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { event in
+            if event.isARepeat {
+                return
+            }
             if event.modifierFlags.contains(.option) && event.keyCode == 49 {
                 NotificationCenter.default.post(name: .toggleRecording, object: nil)
             }
