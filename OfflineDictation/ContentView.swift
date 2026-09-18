@@ -10,6 +10,8 @@ struct ContentView: View {
     @State private var audioRecorder: AVAudioRecorder?
     @State private var recordingURL: URL?
     @State private var whisperPipe: WhisperKit?
+    @AppStorage("selectedModel") private var selectedModel = "small"
+    @State private var loadedModel: String?
 
     var body: some View {
         VStack(spacing: 20) {
@@ -24,9 +26,14 @@ struct ContentView: View {
                 runBenchmark()
             }
             .disabled(isRecording || isTranscribing || isBenchmarking)
+
+            Button("Settings") {
+                print("SETTINGS BUTTON TAPPED")
+                AppDelegate.shared?.openSettings()
+            }
         }
         .padding()
-        .frame(width: 400, height: 220)
+        .frame(width: 400, height: 260)
         .onReceive(NotificationCenter.default.publisher(for: .toggleRecording)) { _ in
             isRecording ? stopRecording() : startRecording()
         }
@@ -56,7 +63,7 @@ struct ContentView: View {
     }
 
     func beginRecording() {
-        (NSApp.delegate as? AppDelegate)?.updateMenuBarIcon(recording: true)
+        AppDelegate.shared?.updateMenuBarIcon(recording: true)
         let fileURL = FileManager.default.temporaryDirectory.appendingPathComponent("liveRecording.wav")
         recordingURL = fileURL
 
@@ -81,7 +88,7 @@ struct ContentView: View {
     func stopRecording() {
         audioRecorder?.stop()
         isRecording = false
-        (NSApp.delegate as? AppDelegate)?.updateMenuBarIcon(recording: false)
+        AppDelegate.shared?.updateMenuBarIcon(recording: false)
         isTranscribing = true
         resultText = "Transcribing..."
         transcribeRecording()
@@ -95,9 +102,10 @@ struct ContentView: View {
         }
         Task {
             do {
-                if whisperPipe == nil {
-                    let config = WhisperKitConfig(model: "small")
+                if whisperPipe == nil || loadedModel != selectedModel {
+                    let config = WhisperKitConfig(model: selectedModel)
                     whisperPipe = try await WhisperKit(config)
+                    loadedModel = selectedModel
                 }
                 let result = try await whisperPipe!.transcribe(audioPath: url.path)
                 let text = result.first?.text ?? ""
