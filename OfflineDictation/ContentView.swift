@@ -6,10 +6,9 @@ struct ContentView: View {
     @State private var resultText = "Tap Record, speak, then tap Stop"
     @State private var isRecording = false
     @State private var isTranscribing = false
-    @State private var isBenchmarking = false
+    @State private var whisperPipe: WhisperKit?
     @State private var audioRecorder: AVAudioRecorder?
     @State private var recordingURL: URL?
-    @State private var whisperPipe: WhisperKit?
     @AppStorage("selectedModel") private var selectedModel = "small"
     @State private var loadedModel: String?
 
@@ -17,34 +16,35 @@ struct ContentView: View {
         VStack(spacing: 20) {
             Text(resultText)
                 .padding()
+                .multilineTextAlignment(.center)
+
             Button(isRecording ? "Stop" : "Record") {
                 isRecording ? stopRecording() : startRecording()
             }
-            .disabled(isTranscribing || isBenchmarking)
-
-            Button("Run Benchmark") {
-                runBenchmark()
-            }
-            .disabled(isRecording || isTranscribing || isBenchmarking)
+            .disabled(isTranscribing)
 
             Button("Settings") {
-                print("SETTINGS BUTTON TAPPED")
                 AppDelegate.shared?.openSettings()
             }
         }
         .padding()
-        .frame(width: 400, height: 260)
+        .frame(width: 400, height: 220)
         .onReceive(NotificationCenter.default.publisher(for: .toggleRecording)) { _ in
             isRecording ? stopRecording() : startRecording()
         }
     }
 
     func startRecording() {
+        guard AVCaptureDevice.default(for: .audio) != nil else {
+            resultText = "No microphone found. Connect one and try again."
+            return
+        }
+
         checkMicPermission { granted in
             if granted {
                 beginRecording()
             } else {
-                resultText = "Microphone access denied. Enable it in System Settings."
+                resultText = "Microphone access denied. Enable it in System Settings, Privacy and Security, Microphone."
             }
         }
     }
@@ -81,7 +81,8 @@ struct ContentView: View {
             isRecording = true
             resultText = "Recording..."
         } catch {
-            resultText = "Could not start recording: \(error.localizedDescription)"
+            resultText = "Could not start recording. Try again in a moment."
+            AppDelegate.shared?.updateMenuBarIcon(recording: false)
         }
     }
 
@@ -89,17 +90,25 @@ struct ContentView: View {
         audioRecorder?.stop()
         isRecording = false
         AppDelegate.shared?.updateMenuBarIcon(recording: false)
-        isTranscribing = true
-        resultText = "Transcribing..."
-        transcribeRecording()
-    }
 
-    func transcribeRecording() {
         guard let url = recordingURL else {
-            resultText = "No recording found"
-            isTranscribing = false
+            resultText = "Something went wrong, no recording was saved."
             return
         }
+
+        let attributes = try? FileManager.default.attributesOfItem(atPath: url.path)
+        let fileSize = attributes?[.size] as? Int ?? 0
+        if fileSize < 1000 {
+            resultText = "Recording was too short or silent. Try speaking closer to the mic."
+            return
+        }
+
+        isTranscribing = true
+        resultText = "Transcribing..."
+        transcribeRecording(url: url)
+    }
+
+    func transcribeRecording(url: URL) {
         Task {
             do {
                 if whisperPipe == nil || loadedModel != selectedModel {
@@ -108,42 +117,17 @@ struct ContentView: View {
                     loadedModel = selectedModel
                 }
                 let result = try await whisperPipe!.transcribe(audioPath: url.path)
-                let text = result.first?.text ?? ""
-                resultText = text.isEmpty ? "No text returned" : text
-                if !text.isEmpty {
+                let text = result.first?.text.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+                if text.isEmpty {
+                    resultText = "Didn't catch any speech. Try again."
+                } else {
+                    resultText = text
                     TextInjector.paste(text)
                 }
             } catch {
-                resultText = "Error: \(error.localizedDescription)"
+                resultText = "Transcription failed. Check your internet connection if this is the first run, since the model needs to download once."
             }
             isTranscribing = false
-        }
-    }
-
-    func runBenchmark() {
-        guard let path = Bundle.main.path(forResource: "sample", ofType: "wav") else {
-            resultText = "Sample file not found"
-            return
-        }
-        isBenchmarking = true
-        resultText = "Running benchmark, check the console"
-        Task {
-            let models = ["tiny", "base", "small"]
-            for modelName in models {
-                let start = Date()
-                do {
-                    let config = WhisperKitConfig(model: modelName)
-                    let pipe = try await WhisperKit(config)
-                    let result = try await pipe.transcribe(audioPath: path)
-                    let elapsed = Date().timeIntervalSince(start)
-                    let text = result.first?.text ?? "No text"
-                    print("Model \(modelName) took \(elapsed) seconds, result is \(text)")
-                } catch {
-                    print("Model \(modelName) failed with error \(error.localizedDescription)")
-                }
-            }
-            resultText = "Benchmark finished, check the console"
-            isBenchmarking = false
         }
     }
 }
@@ -151,4 +135,3 @@ struct ContentView: View {
 #Preview {
     ContentView()
 }
-
