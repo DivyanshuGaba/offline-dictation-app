@@ -7,11 +7,36 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A876191D305DDF6700612C7C /* DictationKeyboard.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A8761916305DDF6600612C7C /* DictationKeyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A88FFDCC3059BE94001FCAD6 /* DictationCore in Frameworks */ = {isa = PBXBuildFile; productRef = A88FFDCB3059BE94001FCAD6 /* DictationCore */; };
 		A88FFDD23059C1B5001FCAD6 /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = A88FFDD13059C1B5001FCAD6 /* WhisperKit */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		A876191B305DDF6700612C7C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A890BF333059BC2300708D30 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A8761915305DDF6600612C7C;
+			remoteInfo = DictationKeyboard;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A8761922305DDF6700612C7C /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			dstPath = "";
+			dstSubfolder = PlugIns;
+			files = (
+				A876191D305DDF6700612C7C /* DictationKeyboard.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		A8761907305DDEEB00612C7C /* OfflineDictationiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OfflineDictationiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A8761916305DDF6600612C7C /* DictationKeyboard.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DictationKeyboard.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		A890BF3B3059BC2300708D30 /* OfflineDictation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OfflineDictation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -23,9 +48,39 @@
 			);
 			target = A890BF3A3059BC2300708D30 /* OfflineDictation */;
 		};
+		A876191E305DDF6700612C7C /* Exceptions for "DictationKeyboard" folder in "DictationKeyboard" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = A8761915305DDF6600612C7C /* DictationKeyboard */;
+		};
+		A8761929305DE09B00612C7C /* Exceptions for "OfflineDictationiOS" folder in "DictationKeyboard" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				SharedStorage.swift,
+			);
+			target = A8761915305DDF6600612C7C /* DictationKeyboard */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		A8761908305DDEEC00612C7C /* OfflineDictationiOS */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A8761929305DE09B00612C7C /* Exceptions for "OfflineDictationiOS" folder in "DictationKeyboard" target */,
+			);
+			path = OfflineDictationiOS;
+			sourceTree = "<group>";
+		};
+		A8761917305DDF6600612C7C /* DictationKeyboard */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				A876191E305DDF6700612C7C /* Exceptions for "DictationKeyboard" folder in "DictationKeyboard" target */,
+			);
+			path = DictationKeyboard;
+			sourceTree = "<group>";
+		};
 		A890BF3D3059BC2300708D30 /* OfflineDictation */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -37,6 +92,16 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		A8761904305DDEEB00612C7C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
+		A8761913305DDF6600612C7C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			files = (
+			);
+		};
 		A890BF383059BC2300708D30 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
@@ -58,6 +123,8 @@
 			isa = PBXGroup;
 			children = (
 				A890BF3D3059BC2300708D30 /* OfflineDictation */,
+				A8761908305DDEEC00612C7C /* OfflineDictationiOS */,
+				A8761917305DDF6600612C7C /* DictationKeyboard */,
 				A88FFDD03059C1B5001FCAD6 /* Frameworks */,
 				A890BF3C3059BC2300708D30 /* Products */,
 			);
@@ -67,6 +134,8 @@
 			isa = PBXGroup;
 			children = (
 				A890BF3B3059BC2300708D30 /* OfflineDictation.app */,
+				A8761907305DDEEB00612C7C /* OfflineDictationiOS.app */,
+				A8761916305DDF6600612C7C /* DictationKeyboard.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -74,6 +143,46 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		A8761906305DDEEB00612C7C /* OfflineDictationiOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A8761911305DDEEF00612C7C /* Build configuration list for PBXNativeTarget "OfflineDictationiOS" */;
+			buildPhases = (
+				A8761903305DDEEB00612C7C /* Sources */,
+				A8761904305DDEEB00612C7C /* Frameworks */,
+				A8761905305DDEEB00612C7C /* Resources */,
+				A8761922305DDF6700612C7C /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A876191C305DDF6700612C7C /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A8761908305DDEEC00612C7C /* OfflineDictationiOS */,
+			);
+			name = OfflineDictationiOS;
+			productName = OfflineDictationiOS;
+			productReference = A8761907305DDEEB00612C7C /* OfflineDictationiOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A8761915305DDF6600612C7C /* DictationKeyboard */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A876191F305DDF6700612C7C /* Build configuration list for PBXNativeTarget "DictationKeyboard" */;
+			buildPhases = (
+				A8761912305DDF6600612C7C /* Sources */,
+				A8761913305DDF6600612C7C /* Frameworks */,
+				A8761914305DDF6600612C7C /* Resources */,
+			);
+			buildRules = (
+			);
+			fileSystemSynchronizedGroups = (
+				A8761917305DDF6600612C7C /* DictationKeyboard */,
+			);
+			name = DictationKeyboard;
+			productName = DictationKeyboard;
+			productReference = A8761916305DDF6600612C7C /* DictationKeyboard.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		A890BF3A3059BC2300708D30 /* OfflineDictation */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A890BF463059BC2600708D30 /* Build configuration list for PBXNativeTarget "OfflineDictation" */;
@@ -106,6 +215,12 @@
 				LastSwiftUpdateCheck = 2700;
 				LastUpgradeCheck = 2700;
 				TargetAttributes = {
+					A8761906305DDEEB00612C7C = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					A8761915305DDF6600612C7C = {
+						CreatedOnToolsVersion = 27.0;
+					};
 					A890BF3A3059BC2300708D30 = {
 						CreatedOnToolsVersion = 27.0;
 					};
@@ -130,11 +245,23 @@
 			projectRoot = "";
 			targets = (
 				A890BF3A3059BC2300708D30 /* OfflineDictation */,
+				A8761906305DDEEB00612C7C /* OfflineDictationiOS */,
+				A8761915305DDF6600612C7C /* DictationKeyboard */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		A8761905305DDEEB00612C7C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
+		A8761914305DDF6600612C7C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			files = (
+			);
+		};
 		A890BF393059BC2300708D30 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
@@ -143,6 +270,16 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		A8761903305DDEEB00612C7C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
+		A8761912305DDF6600612C7C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			files = (
+			);
+		};
 		A890BF373059BC2300708D30 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			files = (
@@ -150,7 +287,155 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		A876191C305DDF6700612C7C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A8761915305DDF6600612C7C /* DictationKeyboard */;
+			targetProxy = A876191B305DDF6700612C7C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		A876190F305DDEEF00612C7C /* Debug configuration for PBXNativeTarget "OfflineDictationiOS" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = OfflineDictationiOS/OfflineDictationiOS.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = BW5BHFVBG6;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = OfflineDictation;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.divyanshu.OfflineDictationiOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A8761910305DDEEF00612C7C /* Release configuration for PBXNativeTarget "OfflineDictationiOS" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = OfflineDictationiOS/OfflineDictationiOS.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = BW5BHFVBG6;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = OfflineDictation;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.divyanshu.OfflineDictationiOS;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A8761920305DDF6700612C7C /* Debug configuration for PBXNativeTarget "DictationKeyboard" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = DictationKeyboard/DictationKeyboard.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = BW5BHFVBG6;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DictationKeyboard/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = DictationKeyboard;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.divyanshu.OfflineDictationiOS.DictationKeyboard;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A8761921305DDF6700612C7C /* Release configuration for PBXNativeTarget "DictationKeyboard" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = DictationKeyboard/DictationKeyboard.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = BW5BHFVBG6;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DictationKeyboard/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = DictationKeyboard;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.divyanshu.OfflineDictationiOS.DictationKeyboard;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		A890BF443059BC2600708D30 /* Debug configuration for PBXProject "OfflineDictation" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -362,6 +647,22 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		A8761911305DDEEF00612C7C /* Build configuration list for PBXNativeTarget "OfflineDictationiOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A876190F305DDEEF00612C7C /* Debug configuration for PBXNativeTarget "OfflineDictationiOS" */,
+				A8761910305DDEEF00612C7C /* Release configuration for PBXNativeTarget "OfflineDictationiOS" */,
+			);
+			defaultConfigurationName = Release;
+		};
+		A876191F305DDF6700612C7C /* Build configuration list for PBXNativeTarget "DictationKeyboard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A8761920305DDF6700612C7C /* Debug configuration for PBXNativeTarget "DictationKeyboard" */,
+				A8761921305DDF6700612C7C /* Release configuration for PBXNativeTarget "DictationKeyboard" */,
+			);
+			defaultConfigurationName = Release;
+		};
 		A890BF363059BC2300708D30 /* Build configuration list for PBXProject "OfflineDictation" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
