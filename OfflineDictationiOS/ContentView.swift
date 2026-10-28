@@ -1,150 +1,202 @@
 import SwiftUI
-import WhisperKit
-import AVFoundation
+import UIKit
 
 struct ContentView: View {
     @Environment(\.scenePhase) private var scenePhase
-    @State private var statusText = "Ready"
-    @State private var isRecording = false
-    @State private var isProcessing = false
-    @State private var whisperPipe: WhisperKit?
-    @State private var audioRecorder: AVAudioRecorder?
-    @State private var recordingURL: URL?
+    @State private var engine = DictationEngine()
+    @State private var hintDismissed = false
+    @AppStorage(TextCleaner.settingsKey) private var cleanupEnabled = false
+    // Checked when the screen appears and when returning to the app, not on every redraw.
+    @State private var cleanupStatus: TextCleaner.Status = .unavailable("")
+    @State private var cloudStatus: TextCleaner.Status = .unavailable("")
+    @AppStorage(TextCleaner.cloudSettingsKey) private var cloudEnabled = false
+    @State private var showCloudConfirm = false
+    @State private var modelToDelete: WhisperModelInfo?
 
     var body: some View {
-        VStack(spacing: 20) {
-            Text(statusText)
-                .padding()
-                .multilineTextAlignment(.center)
-
-            Button(isRecording ? "Stop" : "Record") {
-                isRecording ? stopRecording() : startRecording()
-            }
-            .disabled(isProcessing)
-            .padding()
-            .background(isRecording ? Color.red : Color.blue)
-            .foregroundColor(.white)
-            .cornerRadius(10)
+        HomeView(
+            state: homeState,
+            onMicTap: { engine.toggle() },
+            onCopy: { UIPasteboard.general.string = engine.transcript },
+            onRetryModel: { Task { await engine.model.prepare() } },
+            onOpenSettings: {
+                if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
+            },
+            onDismissHint: { hintDismissed = true },
+            onCancelTranscription: { engine.cancelTranscription() },
+            onToggleCleanup: { cleanupEnabled = $0 },
+            onSkipCleanup: { TextCleaner.skip() },
+            onToggleCloud: { on in
+                // Turning it on needs a clear yes, because text leaves the device.
+                if on { showCloudConfirm = true } else { cloudEnabled = false }
+            },
+            onSelectModel: { engine.model.select($0) },
+            onDownloadModel: { id in Task { await engine.model.download(id) } },
+            onDeleteModel: { modelToDelete = ModelCatalog.info($0) },
+            onTurnOffMic: { engine.turnOffMic() }
+        )
+        .alert("Use Apple's cloud?", isPresented: $showCloudConfirm) {
+            Button("Turn on") { cloudEnabled = true }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Your transcribed text, not your audio, will be sent to Apple's Private Cloud Compute over the internet to be cleaned up. If it can't be reached, Smart cleanup uses the on-device model instead.")
         }
-        .padding()
+        .alert("Delete \(modelToDelete?.name ?? "model")?", isPresented: Binding(get: { modelToDelete != nil }, set: { if !$0 { modelToDelete = nil } })) {
+            Button("Delete", role: .destructive) {
+                if let model = modelToDelete { engine.model.delete(model.id) }
+                modelToDelete = nil
+            }
+            Button("Cancel", role: .cancel) { modelToDelete = nil }
+        } message: {
+            Text("This removes the model from your iPhone and frees \(modelToDelete.map { "about \($0.sizeMB) MB" } ?? "space"). You can download it again any time.")
+        }
+        .onChange(of: engine.phase) { _, phase in
+            if phase == .recording { hintDismissed = false }
+        }
         .onReceive(NotificationCenter.default.publisher(for: .startDictationFromKeyboard)) { _ in
-            startRecordingIfRequested()
+            engine.startIfRequested()
         }
         .onChange(of: scenePhase) { _, phase in
-            if phase == .active { startRecordingIfRequested() }
+            if phase == .active {
+                cleanupStatus = TextCleaner.status
+                cloudStatus = TextCleaner.cloudStatus
+                engine.startIfRequested()
+            }
+        }
+        .onAppear {
+            cleanupStatus = TextCleaner.status
+            cloudStatus = TextCleaner.cloudStatus
         }
         .task {
-            await loadModelIfNeeded()
-            startRecordingIfRequested()
+            // Clear anything a previous, killed run left behind, then start a requested recording straight
+            // away; the model loads alongside it.
+            engine.tidyOnLaunch()
+            engine.startIfRequested()
+            await engine.model.prepare()
         }
     }
 
-    func startRecordingIfRequested() {
-        guard SharedStorage.isRecordingRequested(), !isRecording, !isProcessing else { return }
-        startRecording()
-    }
+    private var homeState: HomeState {
+        var state = HomeState()
 
-    func loadModelIfNeeded() async {
-        guard whisperPipe == nil else { return }
-        if !isRecording && !isProcessing { statusText = "Loading model..." }
-        do {
-            whisperPipe = try await WhisperKit(WhisperKitConfig(model: "small"))
-            if !isRecording && !isProcessing { statusText = "Ready" }
-        } catch {
-            statusText = "Model failed to load: \(error.localizedDescription)"
+        switch engine.phase {
+        case .idle: state.phase = .idle
+        case .recording: state.phase = .recording
+        case .transcribing: state.phase = .transcribing
         }
+        state.hint = idleHint
+        state.elapsed = engine.elapsed
+        state.levels = engine.levels
+        state.transcript = engine.transcript
+        state.micDenied = engine.micDenied
+        state.showSwipeHint = engine.phase == .recording && engine.startedFromKeyboard && !hintDismissed
+        state.isArmed = engine.isArmed
+
+        switch cleanupStatus {
+        case .available:
+            state.cleanupAvailable = true
+            let wait = String(format: "%g", TextCleaner.timeout)
+            state.cleanupNote = TextCleaner.lastRun?.summary ?? "Waits up to \(wait) s, then uses your original text. No runs yet."
+        case .unavailable(let reason):
+            state.cleanupAvailable = false
+            state.cleanupNote = "Not available: " + reason
+        }
+        state.cleanupEnabled = cleanupEnabled
+        state.isPolishing = engine.isPolishing
+
+        switch cloudStatus {
+        case .available: state.cloudAvailable = true
+        case .unavailable(let reason):
+            state.cloudAvailable = false
+            state.cloudNote = reason
+        }
+        state.cloudEnabled = cloudEnabled
+
+        let model = engine.model
+        switch model.status {
+        case .notDownloaded: state.modelStatus = .notDownloaded
+        case .downloading: state.modelStatus = .downloading
+        case .preparing: state.modelStatus = .preparing
+        case .ready: state.modelStatus = .ready
+        case .failed(let message): state.modelStatus = .failed(message)
+        }
+        state.modelName = model.displayName
+        state.modelIdentifier = model.folderName
+        state.modelParameters = model.parameters
+        state.bytesOnDisk = model.bytesOnDisk
+        state.expectedBytes = model.expectedBytes
+        state.downloadProgress = model.downloadProgress
+        state.prepareElapsed = model.prepareElapsed
+        state.prepareEstimate = model.prepareEstimate
+        state.prepareProgress = model.prepareProgress
+
+        state.models = modelRows
+        state.modelActionsEnabled = engine.phase == .idle && model.status != .preparing && model.downloadingID == nil
+        return state
     }
 
-    func startRecording() {
-        guard !isRecording else { return }
+    // One row per model the device can run, with its live state.
+    private var modelRows: [ModelRowState] {
+        let manager = engine.model
+        let deviceDefault = ModelCatalog.deviceDefaultID
 
-        switch AVAudioApplication.shared.recordPermission {
-        case .granted:
-            beginRecording()
-        case .undetermined:
-            AVAudioApplication.requestRecordPermission { granted in
-                DispatchQueue.main.async {
-                    if granted { beginRecording() } else { statusText = "Microphone access denied. Enable it in iOS Settings." }
+        return ModelCatalog.visible(alwaysInclude: [manager.selectedID]).map { info in
+            let downloaded = manager.downloadedIDs.contains(info.id)
+            let isSelected = info.id == manager.selectedID
+
+            let status: ModelRowState.Status
+            if manager.downloadingID == info.id {
+                status = .downloading(manager.downloadProgress)
+            } else if isSelected && (downloaded || manager.status != .notDownloaded) {
+                switch manager.status {
+                case .ready: status = .inUse(.ready)
+                case .failed(let message): status = .inUse(.failed(message))
+                case .downloading: status = .inUse(.downloading)
+                default: status = .inUse(.preparing)
                 }
+            } else if downloaded {
+                status = .downloaded
+            } else {
+                status = .notDownloaded
             }
-        default:
-            statusText = "Microphone access denied. Enable it in iOS Settings."
+
+            var badges: [String] = []
+            if let badge = info.badge { badges.append(badge.rawValue) }
+            if info.id == deviceDefault { badges.append("Device default") }
+
+            var meta = "\(info.sizeMB) MB · \(info.parameters) parameters"
+            if downloaded, let onDisk = manager.sizesOnDisk[info.id], onDisk > 0 {
+                meta = "\(ByteFormat.string(onDisk)) on this iPhone · \(info.parameters) parameters"
+            }
+            if info.englishOnly { meta += " · English only" }
+
+            return ModelRowState(
+                id: info.id,
+                name: info.name,
+                summary: info.summary,
+                bestFor: info.bestFor,
+                badges: badges,
+                meta: meta,
+                downloadSizeText: "\(info.sizeMB) MB",
+                status: status,
+                lastTime: manager.lastTranscribeSeconds[info.id].map { String(format: "Last dictation took %.1f s", $0) },
+                canDelete: downloaded && !isSelected && manager.downloadingID == nil,
+                error: manager.downloadErrors[info.id]
+            )
         }
     }
 
-    func beginRecording() {
-        guard !isRecording else { return }
-
-        let session = AVAudioSession.sharedInstance()
-        do {
-            try session.setCategory(.record, mode: .default)
-            try session.setActive(true)
-        } catch {
-            statusText = "Could not access microphone session"
-            return
+    // While the model is still getting ready, say so under the mic instead of the generic hint.
+    private var idleHint: String {
+        guard engine.phase == .idle, !engine.micDenied else { return engine.hint }
+        if engine.isArmed {
+            let minutes = max(1, Int((Double(engine.standbySecondsLeft) / 60).rounded(.up)))
+            return "Tap the mic on your keyboard to dictate. It turns off after \(minutes) min without use."
         }
-
-        let fileURL = FileManager.default.temporaryDirectory.appendingPathComponent("liveRecording.wav")
-        recordingURL = fileURL
-
-        let settings: [String: Any] = [
-            AVFormatIDKey: kAudioFormatLinearPCM,
-            AVSampleRateKey: 16000,
-            AVNumberOfChannelsKey: 1,
-            AVLinearPCMBitDepthKey: 16,
-            AVLinearPCMIsFloatKey: false
-        ]
-
-        do {
-            try? FileManager.default.removeItem(at: fileURL)
-            audioRecorder = try AVAudioRecorder(url: fileURL, settings: settings)
-            guard audioRecorder?.record() == true else {
-                statusText = "Could not start recording"
-                return
-            }
-            SharedStorage.clearRecordingRequest()
-            isRecording = true
-            statusText = "Recording... tap Stop when done"
-        } catch {
-            statusText = "Could not start recording: \(error.localizedDescription)"
-        }
-    }
-
-    func stopRecording() {
-        let duration = audioRecorder?.currentTime ?? 0
-        audioRecorder?.stop()
-        isRecording = false
-
-        guard let url = recordingURL, duration > 0.5,
-              FileManager.default.fileExists(atPath: url.path) else {
-            statusText = "Recording too short. Tap Record and try again."
-            return
-        }
-
-        isProcessing = true
-        statusText = "Transcribing..."
-
-        Task {
-            do {
-                if whisperPipe == nil {
-                    statusText = "Loading model (first time takes a few minutes)..."
-                    await loadModelIfNeeded()
-                    statusText = "Transcribing..."
-                }
-                guard whisperPipe != nil else { isProcessing = false; return }
-                let result = try await whisperPipe!.transcribe(audioPath: url.path)
-                let text = result.first?.text.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-                if text.isEmpty {
-                    statusText = "Didn't catch any speech"
-                } else {
-                    statusText = "Done: \(text)"
-                    SharedStorage.writeResult(text)
-                    SharedStorage.clearRecordingRequest()
-                }
-            } catch {
-                statusText = "Transcription failed: \(error.localizedDescription)"
-            }
-            isProcessing = false
+        switch engine.model.status {
+        case .downloading: return "Downloading the speech model"
+        case .preparing: return "Getting the model ready. You can still record."
+        default: return engine.hint
         }
     }
 }

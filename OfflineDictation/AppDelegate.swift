@@ -85,7 +85,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         }
 
         let window = NSWindow(
-            contentRect: NSRect(x: 100, y: 100, width: 320, height: 220),
+            contentRect: NSRect(x: 100, y: 100, width: 340, height: 560),
             styleMask: [.titled, .closable],
             backing: .buffered,
             defer: false

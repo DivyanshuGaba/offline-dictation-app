@@ -110,6 +110,9 @@ struct ContentView: View {
 
     func transcribeRecording(url: URL) {
         Task {
+            // Optional smart cleanup: warm the on-device model while Whisper works. No-op when off or unavailable.
+            if TextCleaner.isEnabled { TextCleaner.prewarm() }
+
             do {
                 if whisperPipe == nil || loadedModel != selectedModel {
                     let config = WhisperKitConfig(model: selectedModel)
@@ -121,8 +124,14 @@ struct ContentView: View {
                 if text.isEmpty {
                     resultText = "Didn't catch any speech. Try again."
                 } else {
-                    resultText = text
-                    TextInjector.paste(text)
+                    // Optional smart cleanup. Any problem returns the raw transcript, exactly as before.
+                    var finalText = text
+                    if TextCleaner.isEnabled {
+                        resultText = "Polishing..."
+                        finalText = await TextCleaner.clean(text)
+                    }
+                    resultText = finalText
+                    TextInjector.paste(finalText)
                 }
             } catch {
                 resultText = "Transcription failed. Check your internet connection if this is the first run, since the model needs to download once."
